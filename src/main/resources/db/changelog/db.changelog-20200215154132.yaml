@@ -1,0 +1,52 @@
+databaseChangeLog:
+- changeSet:
+    id: 1581770495056-1
+    author: deniszakharov (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: employeePK
+            name: id
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: salary_id
+            type: VARCHAR(255)
+        tableName: employee
+- changeSet:
+    id: 1581770495056-2
+    author: deniszakharov (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: salaryPK
+            name: id
+            type: VARCHAR(255)
+        - column:
+            name: value
+            type: numeric(19, 2)
+        tableName: salary
+- changeSet:
+    id: 1581770495056-3
+    author: deniszakharov (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: salary_id
+        baseTableName: employee
+        constraintName: FKightkvlpv3s9rmg3mid68bw06
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: salary
+        validate: true
+

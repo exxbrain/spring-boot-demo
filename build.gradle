@@ -1,0 +1,95 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.4.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'org.asciidoctor.convert' version '1.5.8'
+	id 'org.liquibase.gradle' version '2.0.2'
+	id 'java'
+}
+
+group = 'com.exxbrain'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('snippetsDir', file('build/generated-snippets'))
+}
+
+if (!project.hasProperty('runList')) {
+	project.ext.runList = 'main'
+}
+
+project.ext.diffChangelogFile = 'src/main/resources/db/changelog/db.changelog-' + new Date().format('yyyyMMddHHmmss') + '.yaml'
+liquibase {
+	activities {
+		main {
+			driver 'org.postgresql.Driver'
+			url 'jdbc:postgresql://localhost:5432/spring-boot-demo'
+			username 'postgres'
+			password '12345'
+			changeLogFile 'src/main/resources/db/changelog/db.changelog-master.yaml'
+			defaultSchemaName ''
+			logLevel 'debug'
+			classpath 'src/main/resources/'
+		}
+		diffLog {
+			driver 'org.postgresql.Driver'
+			url 'jdbc:postgresql://localhost:5432/spring-boot-demo'
+			username 'postgres'
+			password '12345'
+			changeLogFile project.ext.diffChangelogFile
+			referenceUrl 'hibernate:spring:com.exxbrain.springbootdemo.domain.entity?dialect=org.hibernate.dialect.PostgreSQLDialect&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
+			defaultSchemaName ''
+			logLevel 'debug'
+			classpath "$buildDir/classes/java/main"
+		}
+	}
+
+	runList = project.ext.runList
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.data:spring-data-rest-hal-browser'
+	implementation 'org.liquibase:liquibase-core'
+	liquibaseRuntime 'org.liquibase:liquibase-core'
+	liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate5:3.6'
+	liquibaseRuntime sourceSets.main.compileClasspath
+	liquibaseRuntime 'org.postgresql:postgresql'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'org.postgresql:postgresql'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'com.h2database:h2'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+test {
+	outputs.dir snippetsDir
+	useJUnitPlatform()
+}
+
+asciidoctor {
+	inputs.dir snippetsDir
+	dependsOn test
+}
