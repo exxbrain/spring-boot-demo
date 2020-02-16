@@ -70,8 +70,8 @@ const fireEmployeesSuccess = (): AnyAction => {
 };
 
 interface LoadEmployeesData {
-  _embedded?: {
-    employeeModelList?: Employee[]
+  _embedded: {
+    employees: Employee[]
   }
 }
 
@@ -79,7 +79,7 @@ export const loadEmployees = (): ThunkResult => {
   return async (dispatch) => {
     const result = await axios.get<LoadEmployeesData>("/employees");
     dispatch(loadEmployeesSuccess(
-      result.data?._embedded?.employeeModelList ?? []));
+      result.data._embedded.employees));
   };
 };
 
