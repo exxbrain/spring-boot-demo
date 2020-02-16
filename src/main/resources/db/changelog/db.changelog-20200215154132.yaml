@@ -13,9 +13,13 @@ databaseChangeLog:
             name: id
             type: VARCHAR(255)
         - column:
+            constraints:
+              nullable: false
             name: name
             type: VARCHAR(255)
         - column:
+            constraints:
+              nullable: false
             name: salary_id
             type: VARCHAR(255)
         tableName: employee
@@ -33,6 +37,8 @@ databaseChangeLog:
             name: id
             type: VARCHAR(255)
         - column:
+            constraints:
+              nullable: false
             name: value
             type: numeric(19, 2)
         tableName: salary

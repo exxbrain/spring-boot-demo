@@ -5,6 +5,8 @@
 - Run
 ```
 ./gradlew bootRun
+npm install
+npm start
 ```
 
 ## Development
