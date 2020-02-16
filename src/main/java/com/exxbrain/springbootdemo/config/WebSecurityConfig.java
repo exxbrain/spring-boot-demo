@@ -18,29 +18,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer(@Value("${app.cors.allowed-origins}") final String allowedOrigins) {
-
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                if (allowedOrigins != null) {
-                    registry.addMapping("/**").allowedOrigins(allowedOrigins);
-                }
-            }
-        };
-    }
 
     @Override
     public void configure(WebSecurity web) {
         web.ignoring()
             .antMatchers(HttpMethod.OPTIONS, "/**")
-            .antMatchers("/app/**/*.{js,html}")
-            .antMatchers("/content/**")
-            .antMatchers("/test/**");
+            .antMatchers("/app/**/*.{js,html}");
     }
 
     @Override

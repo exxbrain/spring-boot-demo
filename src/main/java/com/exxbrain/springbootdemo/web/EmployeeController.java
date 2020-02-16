@@ -15,6 +15,9 @@ public class EmployeeController {
         this.employeeRepository = employeeRepository;
     }
 
+    /**
+     * Exposes deleteAll method
+     */
     @DeleteMapping("/employees")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteAll() {
