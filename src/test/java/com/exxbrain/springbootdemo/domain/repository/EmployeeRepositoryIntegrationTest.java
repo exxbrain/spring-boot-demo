@@ -13,8 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(classes = { SpringBootDemoApplication.class })
 @TestPropertySource(
@@ -26,21 +25,41 @@ class EmployeeRepositoryIntegrationTest {
 
     @Test
     @WithAnonymousUser
-    public void hireEmployee_whenPostNewEmployeeAsAnonymous_thenStatus401() throws Exception {
-        getNewEmployeeRequest().andExpect(status().isUnauthorized());
+    public void createEmployee_asAnonymous_thenStatus401() throws Exception {
+        performCreateEmployeeRequest().andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithMockUser
-    public void hireEmployee_whenPostNewEmployeeAsUser_thenStatus201() throws Exception {
-        getNewEmployeeRequest()
+    public void createEmployee_asUser_thenStatus201() throws Exception {
+        performCreateEmployeeRequest()
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"));
     }
 
-    private ResultActions getNewEmployeeRequest() throws Exception {
+    @Test
+    @WithMockUser
+    public void createEmployee_noSalary_thenStatus400() throws Exception {
+        performCreateEmployeeRequest("{ \"name\": \"test\" }")
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$[0].propertyPath").value("salary"));
+    }
+
+    @Test
+    @WithMockUser
+    public void createEmployee_noSalaryValue_thenStatus400() throws Exception {
+        performCreateEmployeeRequest("{ \"name\": \"test\", \"salary\": {} }")
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$[0].propertyPath").value("value"));
+    }
+
+    private ResultActions performCreateEmployeeRequest() throws Exception {
+        return performCreateEmployeeRequest("{ \"name\": \"test\", \"salary\": { \"value\": 50 } }");
+    }
+
+    private ResultActions performCreateEmployeeRequest(String json) throws Exception {
         return mvc.perform(post("/api/employees")
-                .content("{ \"name\": \"test\", \"salary\": { \"value\": 50 } }")
+                .content(json)
                 .contentType(MediaType.APPLICATION_JSON));
     }
 }
