@@ -4,6 +4,7 @@ import com.exxbrain.springbootdemo.domain.entity.Employee;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.math.BigDecimal;
 import java.util.NoSuchElementException;
@@ -18,7 +19,8 @@ class EmployeeRepositoryTest {
     private EmployeeRepository employeeRepository;
 
     @Test
-    public void save_whenSaveNewEmployee_thenFound() {
+    @WithMockUser
+    public void save_whenSaveNewEmployee_thenItFound() {
         Employee test = new Employee("test", new BigDecimal(50));
 
         // when
