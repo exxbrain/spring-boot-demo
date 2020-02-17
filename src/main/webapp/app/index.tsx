@@ -1,13 +1,14 @@
 import React from "react";
 import ReactDOM  from "react-dom";
 import { Provider } from "react-redux";
-import "../index.css";
+import {CssBaseline, ThemeProvider} from "@material-ui/core";
 import {initializeStore} from "./config/store";
 import {ErrorBoundary} from './error-boundary';
 import {registerInterceptors} from "./api/axios";
 import { DevTools } from './config/devtools';
 import './config/i18n';
 import {App, Application} from "./app";
+import { theme } from './theme';
 
 const devTools = process.env.NODE_ENV === 'development' ? <DevTools /> : null;
 
@@ -20,10 +21,12 @@ const render = (Component: Application): void => {
   ReactDOM.render(
     <ErrorBoundary>
       <Provider store={store}>
-        <div>
+        <ThemeProvider theme={theme}>
+          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <CssBaseline />
           {devTools}
           <Component/>
-        </div>
+        </ThemeProvider>
       </Provider>
     </ErrorBoundary>,
     rootEl
