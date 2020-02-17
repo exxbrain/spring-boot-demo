@@ -17,7 +17,7 @@ registerInterceptors(store);
 
 const rootEl = document.querySelector('#app');
 
-const render = (Component: Application): void => {
+const render = (AppComponent: Application): void => {
   ReactDOM.render(
     <ErrorBoundary>
       <Provider store={store}>
@@ -25,7 +25,7 @@ const render = (Component: Application): void => {
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
           {devTools}
-          <Component/>
+          <AppComponent/>
         </ThemeProvider>
       </Provider>
     </ErrorBoundary>,

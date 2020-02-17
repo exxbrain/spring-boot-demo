@@ -79,6 +79,7 @@ export const loadEmployees = (): ThunkResult => {
   return async (dispatch) => {
     const result = await axios.get<LoadEmployeesData>("/employees");
     dispatch(loadEmployeesSuccess(
+      // eslint-disable-next-line no-underscore-dangle
       result.data._embedded.employees));
   };
 };
