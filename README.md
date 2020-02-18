@@ -38,3 +38,11 @@ to compile before)
 - Review this change log and add it to your
   ```src/main/resources/db/changelog/db.changelog-master.yaml``` file,
   so it is applied the next time you run your application
+  
+## Production
+
+### Run
+
+```
+./gradlew -Pprod
+```

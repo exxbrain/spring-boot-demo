@@ -23,7 +23,6 @@ public class Employee {
     @NotNull
     @OneToOne(
         fetch = FetchType.EAGER,
-        targetEntity = Salary.class,
         orphanRemoval = true,
         cascade = CascadeType.ALL
     )

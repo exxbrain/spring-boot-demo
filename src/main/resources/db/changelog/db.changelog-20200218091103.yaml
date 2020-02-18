@@ -1,0 +1,26 @@
+databaseChangeLog:
+- changeSet:
+    id: 1582006267049-1
+    author: deniszakharov (generated)
+    changes:
+    - dropNotNullConstraint:
+        columnDataType: varchar(255)
+        columnName: name
+        tableName: employee
+- changeSet:
+    id: 1582006267049-2
+    author: deniszakharov (generated)
+    changes:
+    - dropNotNullConstraint:
+        columnDataType: varchar(255)
+        columnName: salary_id
+        tableName: employee
+- changeSet:
+    id: 1582006267049-3
+    author: deniszakharov (generated)
+    changes:
+    - dropNotNullConstraint:
+        columnDataType: number(19,2)
+        columnName: value
+        tableName: salary
+
