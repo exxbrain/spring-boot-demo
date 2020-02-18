@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'org.asciidoctor.convert' version '1.5.8'
 	id 'org.liquibase.gradle' version '2.0.2'
+    id 'com.github.node-gradle.node' version '2.2.1'
 	id 'java'
 }
 
@@ -23,6 +24,19 @@ configurations {
 repositories {
 	mavenCentral()
 }
+
+if (project.hasProperty("prod")) {
+    apply from: "gradle/profile_prod.gradle"
+} else {
+    apply from: "gradle/profile_dev.gradle"
+}
+
+defaultTasks "bootRun"
+
+springBoot {
+    mainClassName = "com.exxbrain.springbootdemo.SpringBootDemoApplication"
+}
+
 
 ext {
 	set('snippetsDir', file('build/generated-snippets'))
@@ -73,7 +87,6 @@ dependencies {
 	liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate5:3.6'
 	liquibaseRuntime sourceSets.main.compileClasspath
 	liquibaseRuntime 'org.postgresql:postgresql'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -93,3 +106,6 @@ asciidoctor {
 	inputs.dir snippetsDir
 	dependsOn test
 }
+
+compileJava.dependsOn processResources
+processResources.dependsOn bootBuildInfo

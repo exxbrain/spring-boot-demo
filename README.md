@@ -4,12 +4,20 @@
 ```src/main/resources/application.properties```
 - Run
 ```
-./gradlew bootRun
-npm install
-npm start
+./gradlew
 ```
 
 ## Development
+
+- Run 
+```
+npm install
+```
+
+```
+./gradlew -x webpack
+npm start
+```
 
 ### Add changelog
 
