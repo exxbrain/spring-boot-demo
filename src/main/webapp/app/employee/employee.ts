@@ -2,7 +2,7 @@ import axios from "axios";
 import { ThunkAction } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import BigNumber from 'bignumber.js';
-import { Employee } from "./employee.model";
+import { Employee, Page } from "./employee.model";
 
 // Action types
 export const ACTION_TYPE = {
@@ -13,11 +13,18 @@ export const ACTION_TYPE = {
 };
 
 export interface EmployeesState {
-    employees: Employee[]
+  employees: Employee[],
+  page: Page
 }
 
 const initialState: EmployeesState = {
-    employees: []
+  employees: [],
+  page: {
+    size: 0,
+    totalElements: 0,
+    totalPages: 0,
+    number: 0
+  }
 };
 
 export type ThunkResult = ThunkAction<Promise<void>, EmployeesState, undefined, AnyAction>;
@@ -34,13 +41,14 @@ export const employeeReducer = (state: EmployeesState = initialState, action: An
       return {
         ...state,
         employees: state.employees.map(employee =>
-            employee.id === action.employee.id ? action.employee : employee
+          employee.id === action.employee.id ? action.employee : employee
         )
       };
     case ACTION_TYPE.LOAD_EMPLOYEES_SUCCESS:
       return {
         ...state,
-        employees: action.employees
+        employees: action.employees,
+        page: action.page
       };
     case ACTION_TYPE.FIRE_EMPLOYEES_SUCCESS:
       return {
@@ -53,8 +61,8 @@ export const employeeReducer = (state: EmployeesState = initialState, action: An
 };
 
 // Actions
-const loadEmployeesSuccess = (employees: Employee[]) : AnyAction => {
-  return { type: ACTION_TYPE.LOAD_EMPLOYEES_SUCCESS, employees };
+const loadEmployeesSuccess = (employees: Employee[], page: Page) : AnyAction => {
+  return { type: ACTION_TYPE.LOAD_EMPLOYEES_SUCCESS, employees, page };
 };
 
 const hireEmployeeSuccess = (employee: Employee): AnyAction  => {
@@ -72,31 +80,32 @@ const fireEmployeesSuccess = (): AnyAction => {
 interface LoadEmployeesData {
   _embedded: {
     employees: Employee[]
-  }
+  },
+  page: Page
 }
 
-export const loadEmployees = (): ThunkResult => {
+export const loadEmployees = (page = 0, size = 20): ThunkResult => {
   return async (dispatch) => {
-    const result = await axios.get<LoadEmployeesData>("/employees");
+    const result = await axios.get<LoadEmployeesData>(`/employees?page=${page}&size=${size}&sort=name,id`);
     dispatch(loadEmployeesSuccess(
       // eslint-disable-next-line no-underscore-dangle
-      result.data._embedded.employees));
+      result.data._embedded.employees, result.data.page));
   };
 };
 
 export const hireNewEmployee =
-    (name: string, salaryValue: BigNumber): ThunkResult =>
+  (name: string, salaryValue: BigNumber): ThunkResult =>
     async dispatch => {
-        const result = await axios.post<Employee>(
-            "/employees",
-            { name, salaryValue },
-            {
-                auth: {
-                    username: "USER",
-                    password: "USER"
-                }
-            });
-        dispatch(hireEmployeeSuccess(result.data));
+      const result = await axios.post<Employee>(
+        "/employees",
+        { name, salaryValue },
+        {
+          auth: {
+            username: "USER",
+            password: "USER"
+          }
+        });
+      dispatch(hireEmployeeSuccess(result.data));
     };
 
 export const updateEmployee = (employee: Employee): ThunkResult => {

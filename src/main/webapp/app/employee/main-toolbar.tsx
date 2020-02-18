@@ -20,7 +20,7 @@ const styles = ({ spacing}: Theme) : StyleRules => createStyles({
     margin: spacing(1),
   },
   toolbar: {
-    paddingLeft: spacing(0),
+    paddingLeft: spacing(1),
     paddingRight: spacing(0)
   }
 });
