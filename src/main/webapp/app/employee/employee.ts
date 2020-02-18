@@ -1,8 +1,8 @@
 import axios from "axios";
 import { ThunkAction } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { Employee, Page } from "./employee.model";
 import BigNumber from "bignumber.js";
+import { Employee, Page } from "./employee.model";
 
 // Action types
 export const ACTION_TYPE = {
