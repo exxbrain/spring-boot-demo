@@ -2,6 +2,7 @@ import axios from "axios";
 import { ThunkAction } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { Employee, Page } from "./employee.model";
+import BigNumber from "bignumber.js";
 
 // Action types
 export const ACTION_TYPE = {
@@ -95,11 +96,11 @@ export const loadEmployees = (page = 0, size = 20): ThunkResult => {
 };
 
 export const hireNewEmployee =
-  (employee: Employee): ThunkResult =>
+  (name: string, salary: BigNumber): ThunkResult =>
     async dispatch => {
       const result = await axios.post<Employee>(
         "/employees",
-        employee,
+        {name, salary: {value: salary}},
         {
           auth: {
             username: "USER",

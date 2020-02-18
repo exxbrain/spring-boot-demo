@@ -6,21 +6,20 @@ import Toolbar from "@material-ui/core/Toolbar";
 import {Button, Typography } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
-import {
-  fireEmployees as fireEmployeesAction,
-  hireNewEmployee as hireNewEmployeeAction,
-} from "./employee";
+import { fireEmployees as fireEmployeesAction } from "./employee";
 import {RootState} from "../root-reducer";
-import {Employee} from "./employee.model";
 import { DeleteAlert } from './delete-alert';
 import {AddEmployeeDialog} from "./add-employee-dialog";
 
-const styles = ({ spacing}: Theme) : StyleRules => createStyles({
+const styles = ({ spacing, palette}: Theme) : StyleRules => createStyles({
   title: {
     flexGrow: 1,
   },
   margin: {
     margin: spacing(1),
+  },
+  toolbarIcon: {
+    color: palette.background.default
   },
   toolbar: {
     paddingLeft: spacing(1),
@@ -33,8 +32,7 @@ interface MainToolbarProps extends DispatchProps, StateProps, WithStyles<typeof 
 const toolbar = ({
                    classes,
                    employeesExist,
-                   fireEmployees,
-                   hireNewEmployee
+                   fireEmployees
                  }: MainToolbarProps) : JSX.Element => {
   const { t } = useTranslation(undefined, { useSuspense: true });
   const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
@@ -48,11 +46,11 @@ const toolbar = ({
         className={classes.margin}
         disabled={!employeesExist}
         onClick={() => setDeleteAlertOpen(true)}>
-        <DeleteIcon />
+        <DeleteIcon className={classes.toolbarIcon}/>
       </Button>
       <Button
         onClick={() => setAddEmployeeDialogOpen(true)}>
-        <AddIcon/>
+        <AddIcon className={classes.toolbarIcon}/>
       </Button>
       <DeleteAlert
         open={deleteAlertOpen}
@@ -64,19 +62,14 @@ const toolbar = ({
       />
       <AddEmployeeDialog
         open={addEmployeeDialogOpen}
-        onCancel={() => setAddEmployeeDialogOpen(false)}
-        onSuccess={(employee: Employee) => {
-          setAddEmployeeDialogOpen(false);
-          hireNewEmployee(employee);
-        }}
+        onClose={() => setAddEmployeeDialogOpen(false)}
       />
     </Toolbar>
   );
 };
 
 const mapDispatchToProps = {
-  fireEmployees: fireEmployeesAction,
-  hireNewEmployee: hireNewEmployeeAction
+  fireEmployees: fireEmployeesAction
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
