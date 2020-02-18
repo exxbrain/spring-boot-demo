@@ -1,5 +1,8 @@
 {
   "Employees": "Сотрудники",
   "Name": "Имя",
-  "Salary": "Оклад"
+  "Salary": "Оклад",
+  "No employees found!": "Сотрудники не найдены!",
+  "Rows per page": "Записей на странице",
+  "of": "из"
 }

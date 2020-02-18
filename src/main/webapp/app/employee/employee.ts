@@ -1,7 +1,6 @@
 import axios from "axios";
 import { ThunkAction } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import BigNumber from 'bignumber.js';
 import { Employee, Page } from "./employee.model";
 
 // Action types
@@ -35,7 +34,8 @@ export const employeeReducer = (state: EmployeesState = initialState, action: An
     case ACTION_TYPE.HIRE_EMPLOYEE_SUCCESS:
       return {
         ...state,
-        employees: [...state.employees, action.employee]
+        employees: [action.employee, ...state.employees],
+        page: {...state.page, totalElements: state.page.totalElements + 1}
       };
     case ACTION_TYPE.UPDATE_EMPLOYEE_SUCCESS:
       return {
@@ -53,7 +53,8 @@ export const employeeReducer = (state: EmployeesState = initialState, action: An
     case ACTION_TYPE.FIRE_EMPLOYEES_SUCCESS:
       return {
         ...state,
-        employees: []
+        employees: [],
+        page: {...state.page, totalElements: 0}
       };
     default:
       return state;
@@ -94,11 +95,11 @@ export const loadEmployees = (page = 0, size = 20): ThunkResult => {
 };
 
 export const hireNewEmployee =
-  (name: string, salaryValue: BigNumber): ThunkResult =>
+  (employee: Employee): ThunkResult =>
     async dispatch => {
       const result = await axios.post<Employee>(
         "/employees",
-        { name, salaryValue },
+        employee,
         {
           auth: {
             username: "USER",

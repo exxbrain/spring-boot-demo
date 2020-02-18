@@ -1,9 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
 import {connect} from "react-redux";
 import {createStyles, StyleRules, Theme, withStyles, WithStyles} from "@material-ui/core/styles";
 import {useTranslation} from "react-i18next";
 import Toolbar from "@material-ui/core/Toolbar";
-import {Button, Typography} from "@material-ui/core";
+import {Button, Typography } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import {
@@ -11,6 +11,9 @@ import {
   hireNewEmployee as hireNewEmployeeAction,
 } from "./employee";
 import {RootState} from "../root-reducer";
+import {Employee} from "./employee.model";
+import { DeleteAlert } from './delete-alert';
+import {AddEmployeeDialog} from "./add-employee-dialog";
 
 const styles = ({ spacing}: Theme) : StyleRules => createStyles({
   title: {
@@ -27,19 +30,46 @@ const styles = ({ spacing}: Theme) : StyleRules => createStyles({
 
 interface MainToolbarProps extends DispatchProps, StateProps, WithStyles<typeof styles> {}
 
-const toolbar = ({classes, employeesExist}: MainToolbarProps) : JSX.Element => {
+const toolbar = ({
+                   classes,
+                   employeesExist,
+                   fireEmployees,
+                   hireNewEmployee
+                 }: MainToolbarProps) : JSX.Element => {
   const { t } = useTranslation(undefined, { useSuspense: true });
+  const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
+  const [addEmployeeDialogOpen, setAddEmployeeDialogOpen] = useState(false);
   return (
     <Toolbar className={classes.toolbar}>
       <Typography variant="h3" className={classes.title}>
         {t("Employees")}
       </Typography>
-      <Button className={classes.margin} disabled={!employeesExist}>
+      <Button
+        className={classes.margin}
+        disabled={!employeesExist}
+        onClick={() => setDeleteAlertOpen(true)}>
         <DeleteIcon />
       </Button>
-      <Button>
+      <Button
+        onClick={() => setAddEmployeeDialogOpen(true)}>
         <AddIcon/>
       </Button>
+      <DeleteAlert
+        open={deleteAlertOpen}
+        onCancel={() => setDeleteAlertOpen(false)}
+        onConfirm={() => {
+          setDeleteAlertOpen(false);
+          fireEmployees();
+        }}
+      />
+      <AddEmployeeDialog
+        open={addEmployeeDialogOpen}
+        onCancel={() => setAddEmployeeDialogOpen(false)}
+        onSuccess={(employee: Employee) => {
+          setAddEmployeeDialogOpen(false);
+          hireNewEmployee(employee);
+        }}
+      />
     </Toolbar>
   );
 };

@@ -47,6 +47,7 @@ const table = (
     pageObject,
     classes,
     loadEmployees,
+    isEmpty
   }: Props) : JSX.Element => {
 
   useEffect(() => {loadEmployees();}, []);
@@ -75,18 +76,26 @@ const table = (
             {employees.map(employee => (
               EmployeeRow(employee)
             ))}
+            {
+              isEmpty && <TableCell>
+                {t("No employees found!")}
+              </TableCell>
+            }
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[20, 50, 100]}
-        component="div"
-        count={pageObject.totalElements}
-        rowsPerPage={pageObject.size}
-        page={pageObject.number}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
-      />
+      {
+        !isEmpty && <TablePagination
+          rowsPerPageOptions={[20, 50, 100]}
+          labelRowsPerPage={t("Rows per page")}
+
+          component="div"
+          count={pageObject.totalElements}
+          rowsPerPage={pageObject.size}
+          page={pageObject.number}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}/>
+      }
     </>
   );
 };
@@ -99,7 +108,8 @@ const mapDispatchToProps = {
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const mapStateToProps = ({employee}: RootState) => ({
   employees: employee.employees,
-  pageObject: employee.page
+  pageObject: employee.page,
+  isEmpty: employee.employees.length === 0
 });
 
 type DispatchProps = typeof mapDispatchToProps;

@@ -5,7 +5,7 @@ export interface Salary {
 }
 
 export interface Employee {
-  id: string;
+  id?: string;
   name: string;
   salary: Salary;
 }
