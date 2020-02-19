@@ -112,7 +112,7 @@ export const hireNewEmployee =
 
 export const updateEmployee = (employee: Employee): ThunkResult => {
   return async (dispatch) => {
-    await axios.patch("/employees", employee);
+    await axios.patch(`/employees/${employee.id}`, employee);
     dispatch(updateEmployeeSuccess(employee));
   };
 };

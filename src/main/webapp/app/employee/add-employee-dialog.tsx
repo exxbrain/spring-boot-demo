@@ -4,15 +4,14 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
-  TextField, withStyles
+  DialogTitle, TextField,
+  withStyles
 } from "@material-ui/core";
 import React from "react";
 import BigNumber from 'bignumber.js';
 import {Formik} from "formik";
 import {connect} from "react-redux";
 import {createStyles, StyleRules, Theme, WithStyles} from "@material-ui/core/styles";
-import {Employee} from './employee.model';
 import { hireNewEmployee as hireNewEmployeeAction } from "./employee";
 
 const styles = ({ spacing}: Theme) : StyleRules => createStyles({
@@ -59,11 +58,12 @@ const dialog = ({open, onClose, hireNewEmployee, classes}: Props): JSX.Element =
       >
         {({ values,
             errors,
+            touched,
             isSubmitting,
             handleSubmit,
             handleChange,
             handleBlur
-        }) => (
+          }) => (
           <form onSubmit={handleSubmit}>
             <DialogContent>
               <TextField
@@ -72,7 +72,8 @@ const dialog = ({open, onClose, hireNewEmployee, classes}: Props): JSX.Element =
                 label={t("Name")}
                 name="name"
                 variant="outlined"
-                error={Boolean(errors.name)}
+                error={touched.name && Boolean(errors.name)}
+                helperText={touched.name ? errors.name : ""}
                 value={values.name}
                 onChange={handleChange}
                 onBlur={handleBlur}/>
@@ -83,14 +84,15 @@ const dialog = ({open, onClose, hireNewEmployee, classes}: Props): JSX.Element =
                 name="salary"
                 type="Number"
                 variant="outlined"
-                error={Boolean(errors.salary)}
+                error={touched.salary && Boolean(errors.salary)}
+                helperText={touched.salary ? errors.salary : ""}
                 value={values.salary}
                 onChange={handleChange}
                 onBlur={handleBlur}/>
             </DialogContent>
             <DialogActions>
               <Button onClick={onClose}>
-                {t("Cancel")}
+                {t("Next time")}
               </Button>
               <Button
                 type="submit"

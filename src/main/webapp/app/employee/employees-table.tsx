@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import { connect } from 'react-redux';
 import { useTranslation } from "react-i18next";
 import Paper from "@material-ui/core/Paper";
@@ -9,10 +9,12 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import { createStyles, WithStyles, StyleRules, withStyles } from '@material-ui/core/styles';
 import SaveIcon from '@material-ui/icons/Save';
-import {Button, TableHead, TextField, TablePagination} from "@material-ui/core";
+import { TableHead, TextField, TablePagination, IconButton, } from "@material-ui/core";
 
+import BigNumber from "bignumber.js";
 import {
-  loadEmployees as loadEmployeesAction
+  loadEmployees as loadEmployeesAction,
+  updateEmployee as updateEmployeeAction
 } from "./employee";
 import {RootState} from "../root-reducer";
 import {Employee} from "./employee.model";
@@ -24,33 +26,18 @@ const styles = () : StyleRules => createStyles({
 
 type Props = StateProps & DispatchProps & WithStyles<typeof styles>
 
-const EmployeeRow = (employee: Employee): JSX.Element => (
-  <TableRow key={employee.id}>
-    <TableCell component="th" scope="row">
-      {employee.name}
-    </TableCell>
-    <TableCell align="right">
-      <TextField
-        type="number"
-        value={employee.salary.value}/>
-    </TableCell>
-    <TableCell padding="checkbox">
-      <Button hidden>
-        <SaveIcon/>
-      </Button>
-    </TableCell>
-  </TableRow>
-);
-
 const table = (
   { employees,
     pageObject,
     classes,
     loadEmployees,
-    isEmpty
+    isEmpty,
+    updateEmployee
   }: Props) : JSX.Element => {
 
   useEffect(() => {loadEmployees();}, []);
+  const[updatedEmployees, setUpdatedEmployees] = useState(new Map<string, Employee>());
+
   const { t } = useTranslation(undefined, { useSuspense: true });
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, page: number): void => {
@@ -61,8 +48,38 @@ const table = (
     loadEmployees(0, +event.target.value);
   };
 
+  const handleSalaryChanged = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const value = new BigNumber(event.target.value);
+    if (!value) {
+      return;
+    }
+    const index = /.*\[(\d*)]$/.exec(event.target.name);
+    if (index != null) {
+      const employee = employees[+index[1]];
+      if (value.eq(employee.salary.value)) {
+        updatedEmployees.delete(employee.id);
+      } else {
+        const updatedEmployee: Employee = {
+          ...employee,
+          salary: {
+            ...employee.salary,
+            value
+          }
+        };
+        updatedEmployees.set(updatedEmployee.id, updatedEmployee);
+      }
+      setUpdatedEmployees(new Map(updatedEmployees));
+    }
+  };
+
+  const saveEmployee = async (employee: Employee): Promise<any> => {
+    await updateEmployee(employee);
+    updatedEmployees.delete(employee.id);
+    setUpdatedEmployees(new Map(updatedEmployees));
+  };
+
   return (
-    <>
+    <form>
       <TableContainer component={Paper}>
         <Table className={classes.table} >
           <TableHead>
@@ -73,13 +90,37 @@ const table = (
             </TableRow>
           </TableHead>
           <TableBody>
-            {employees.map(employee => (
-              EmployeeRow(employee)
-            ))}
             {
-              isEmpty && <TableCell>
-                {t("No employees found!")}
-              </TableCell>
+              employees.map((employee, index) => {
+                const updatedEmployee = updatedEmployees.get(employee.id);
+                return (
+                  <TableRow key={employee.id}>
+                    <TableCell>
+                      {employee.name}
+                    </TableCell>
+                    <TableCell align="right">
+                      <TextField
+                        type="number"
+                        name={`salaries[${index}]`}
+                        value={updatedEmployee?.salary?.value || employee.salary.value}
+                        onChange={handleSalaryChanged}
+                      />
+                    </TableCell>
+                    <TableCell padding="checkbox" size="small">
+                      { updatedEmployee && <IconButton onClick={() => saveEmployee(updatedEmployee)}>
+                        <SaveIcon/>
+                      </IconButton> }
+                    </TableCell>
+                  </TableRow>
+                )
+              })
+            }
+            {
+              isEmpty && <TableRow>
+                <TableCell>
+                  {t("No employees found!")}
+                </TableCell>
+              </TableRow>
             }
           </TableBody>
         </Table>
@@ -96,12 +137,13 @@ const table = (
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}/>
       }
-    </>
+    </form>
   );
 };
 
 const mapDispatchToProps = {
-  loadEmployees: loadEmployeesAction
+  loadEmployees: loadEmployeesAction,
+  updateEmployee: updateEmployeeAction
 };
 
 

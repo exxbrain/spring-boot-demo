@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {createStyles, StyleRules, Theme, withStyles, WithStyles} from "@material-ui/core/styles";
 import {useTranslation} from "react-i18next";
 import Toolbar from "@material-ui/core/Toolbar";
-import {Button, Typography } from "@material-ui/core";
+import { Typography, IconButton } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import { fireEmployees as fireEmployeesAction } from "./employee";
@@ -42,16 +42,16 @@ const toolbar = ({
       <Typography variant="h3" className={classes.title}>
         {t("Employees")}
       </Typography>
-      <Button
+      <IconButton
         className={classes.margin}
         disabled={!employeesExist}
         onClick={() => setDeleteAlertOpen(true)}>
         <DeleteIcon className={classes.toolbarIcon}/>
-      </Button>
-      <Button
+      </IconButton>
+      <IconButton
         onClick={() => setAddEmployeeDialogOpen(true)}>
         <AddIcon className={classes.toolbarIcon}/>
-      </Button>
+      </IconButton>
       <DeleteAlert
         open={deleteAlertOpen}
         onCancel={() => setDeleteAlertOpen(false)}

@@ -6,6 +6,9 @@
   "Rows per page": "Записей на странице",
   "Required": "Обязательное поле",
   "Save": "Сохранить",
-  "Cancel": "Отменить",
-  "New employee!": "Новый сотрудник!"
+  "New employee!": "Новый сотрудник!",
+  "Next time": "В следующий раз",
+  "Do not remove": "Не удалять",
+  "Remove": "Удалить",
+  "Are you sure you want to remove all employees?": "Вы уверены, что хотите удалить всех сотрудников?"
 }

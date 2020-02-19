@@ -17,19 +17,13 @@ export const DeleteAlert = ({open, onCancel, onConfirm}: DeleteAlertProps): JSX.
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">Use Google&lsquo;s location service?</DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          Let Google help apps determine location. This means sending anonymous location data to
-          Google, even when no apps are running.
-        </DialogContentText>
-      </DialogContent>
+      <DialogTitle id="alert-dialog-title">{t("Are you sure you want to remove all employees?")}</DialogTitle>
       <DialogActions>
         <Button onClick={onCancel}>
-          Disagree
+          {t("Do not remove")}
         </Button>
         <Button onClick={onConfirm} autoFocus>
-          Agree
+          {t("Remove")}
         </Button>
       </DialogActions>
     </Dialog>
