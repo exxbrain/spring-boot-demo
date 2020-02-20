@@ -12,8 +12,9 @@ const utils = require('./utils.js');
 const commonConfig = require('./webpack.common.js');
 
 const ENV = 'development';
+const SERVER_API_URL = 'http://localhost:8080/api';
 
-module.exports = (options) => webpackMerge(commonConfig({ env: ENV }), {
+module.exports = (options) => webpackMerge(commonConfig({ env: ENV, serverApiUrl: SERVER_API_URL }), {
   devtool: 'eval-source-map', // https://reactjs.org/docs/cross-origin-errors.html
   mode: ENV,
   entry: [

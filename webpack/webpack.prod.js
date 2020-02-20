@@ -11,8 +11,9 @@ const utils = require('./utils.js');
 const commonConfig = require('./webpack.common.js');
 
 const ENV = 'production';
+const SERVER_API_URL = 'http://localhost/api';
 
-module.exports = webpackMerge(commonConfig({ env: ENV }), {
+module.exports = webpackMerge(commonConfig({ env: ENV, serverApiUrl: SERVER_API_URL }), {
   // devtool: 'source-map', // Enable source maps. Please note that this will slow down the build
   mode: ENV,
   entry: {
