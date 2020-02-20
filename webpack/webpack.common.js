@@ -101,7 +101,7 @@ module.exports = options => ({
         // APP_VERSION is passed as an environment variable from the Gradle / Maven build tasks.
         VERSION: `'${process.env.hasOwnProperty('APP_VERSION') ? process.env.APP_VERSION : 'DEV'}'`,
         DEBUG_INFO_ENABLED: options.env === 'development',
-        SERVER_API_URL: `'http://localhost:8080/api/'`
+        SERVER_API_URL: options.env === 'development' ? `'http://localhost:8080/api/'` : `'http://localhost:80/api/'`
       }
     }),
     new ForkTsCheckerWebpackPlugin({ eslint: true }),
