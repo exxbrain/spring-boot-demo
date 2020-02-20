@@ -42,7 +42,18 @@ to compile before)
 ## Production
 
 ### Run
-
 ```
 ./gradlew -Pprod
+```
+
+## Other cases
+
+### Run jar
+```
+./gradlew build && java -jar build/libs/spring-boot-demo-0.0.1-SNAPSHOT.jar
+```
+### Docker
+Build docker image
+```
+./gradlew build && docker build -t exxbrain/spring-boot-demo .
 ```

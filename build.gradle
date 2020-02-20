@@ -1,15 +1,20 @@
 plugins {
+    id 'java'
+    id 'eclipse'
+    id 'idea'
 	id 'org.springframework.boot' version '2.2.4.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'org.asciidoctor.convert' version '1.5.8'
 	id 'org.liquibase.gradle' version '2.0.2'
     id 'com.github.node-gradle.node' version '2.2.1'
-	id 'java'
+    id 'com.google.cloud.tools.jib' version '1.8.0'
 }
 
 group = 'com.exxbrain'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 configurations {
 	developmentOnly
