@@ -5,20 +5,29 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle, TextField,
-  withStyles
+  withStyles,
+  IconButton
 } from "@material-ui/core";
 import React from "react";
-import BigNumber from 'bignumber.js';
-import {Formik} from "formik";
 import {connect} from "react-redux";
 import {createStyles, StyleRules, Theme, WithStyles} from "@material-ui/core/styles";
+import BigNumber from 'bignumber.js';
+import { Close as CloseIcon } from "@material-ui/icons"
+import {Formik, Form} from "formik";
 import { hireNewEmployee as hireNewEmployeeAction } from "./employee";
+import { MoneyFormat } from "../common/money-format";
 
-const styles = ({ spacing}: Theme) : StyleRules => createStyles({
+const styles = ({ spacing, palette}: Theme) : StyleRules => createStyles({
   margin: {
     marginTop: spacing(1),
     marginBottom: spacing(1),
-  }
+  },
+  closeButton: {
+    position: 'absolute',
+    right: spacing(1),
+    top: spacing(1),
+    color: palette.grey[500],
+  },
 });
 
 interface AddEmployeeDialogProps {
@@ -27,6 +36,10 @@ interface AddEmployeeDialogProps {
 }
 
 type Props = AddEmployeeDialogProps & DispatchProps & WithStyles<typeof styles>;
+interface State {
+  name: string;
+  salary: string;
+}
 
 const dialog = ({open, onClose, hireNewEmployee, classes}: Props): JSX.Element => {
   const { t } = useTranslation(undefined, { useSuspense: true });
@@ -37,9 +50,14 @@ const dialog = ({open, onClose, hireNewEmployee, classes}: Props): JSX.Element =
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{t("New employee!")}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">
+        {t("New employee!")}
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       <Formik
-        initialValues={{ name: '', salary: '' }}
+        initialValues={{name: '', salary: ''}}
         validate={values => {
           let errors = {};
           if (!values.name) {
@@ -60,48 +78,48 @@ const dialog = ({open, onClose, hireNewEmployee, classes}: Props): JSX.Element =
             errors,
             touched,
             isSubmitting,
-            handleSubmit,
             handleChange,
             handleBlur
           }) => (
-          <form onSubmit={handleSubmit}>
+          <Form>
             <DialogContent>
               <TextField
                 className={classes.margin}
                 fullWidth
-                label={t("Name")}
-                name="name"
-                variant="outlined"
+                required
                 error={touched.name && Boolean(errors.name)}
-                helperText={touched.name ? errors.name : ""}
+                helperText={touched.salary && errors.name}
                 value={values.name}
+                onBlur={handleBlur}
+                name="name"
+                label={t("Name")}
                 onChange={handleChange}
-                onBlur={handleBlur}/>
+                variant="outlined"/>
               <TextField
                 className={classes.margin}
                 fullWidth
                 label={t("Salary")}
-                name="salary"
-                type="Number"
                 variant="outlined"
+                required
+                name="salary"
                 error={touched.salary && Boolean(errors.salary)}
-                helperText={touched.salary ? errors.salary : ""}
+                helperText={touched.salary && errors.salary}
                 value={values.salary}
                 onChange={handleChange}
-                onBlur={handleBlur}/>
+                onBlur={handleBlur}
+                InputProps={{
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  inputComponent: MoneyFormat as any,
+                }}/>
             </DialogContent>
             <DialogActions>
-              <Button onClick={onClose}>
-                {t("Next time")}
-              </Button>
-              <Button
+              <Button disabled={isSubmitting}
                 type="submit"
-                disabled={isSubmitting}
                 autoFocus>
                 {t("Save")}
               </Button>
             </DialogActions>
-          </form>
+          </Form>
         )}
       </Formik>
     </Dialog>

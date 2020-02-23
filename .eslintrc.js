@@ -32,6 +32,8 @@ module.exports = {
     "react/destructuring-assignment": "off",
     // No jsx extension: https://github.com/facebook/create-react-app/issues/87#issuecomment-234627904
     "react/jsx-filename-extension": "off",
+    "react/jsx-props-no-spreading": "off",
+    "unicorn/consistent-function-scoping": "off",
     // Use function hoisting to improve code readability
     "no-use-before-define": [
       "error",

@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogTitle} from "@material-ui/core";
 import React from "react";
 
 interface DeleteAlertProps {

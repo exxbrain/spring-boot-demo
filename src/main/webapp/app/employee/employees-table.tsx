@@ -9,7 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import { createStyles, WithStyles, StyleRules, withStyles } from '@material-ui/core/styles';
 import SaveIcon from '@material-ui/icons/Save';
-import { TableHead, TextField, TablePagination, IconButton, } from "@material-ui/core";
+import {TableHead, TablePagination, IconButton, TextField} from "@material-ui/core";
 
 import BigNumber from "bignumber.js";
 import {
@@ -18,10 +18,17 @@ import {
 } from "./employee";
 import {RootState} from "../root-reducer";
 import {Employee} from "./employee.model";
+import {MoneyFormat} from "../common/money-format";
 
 const styles = () : StyleRules => createStyles({
   paper: { /* ... */ },
   button: { /* ... */ },
+  buttonCell: {
+    width: 60
+  },
+  tableHead: {
+    fontWeight: "bold"
+  }
 });
 
 type Props = StateProps & DispatchProps & WithStyles<typeof styles>
@@ -72,6 +79,7 @@ const table = (
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const saveEmployee = async (employee: Employee): Promise<any> => {
     await updateEmployee(employee);
     updatedEmployees.delete(employee.id);
@@ -81,12 +89,12 @@ const table = (
   return (
     <form>
       <TableContainer component={Paper}>
-        <Table className={classes.table} >
+        <Table className={classes.table} size="small">
           <TableHead>
             <TableRow>
-              <TableCell className={classes.title}>{t("Name")}</TableCell>
-              <TableCell align="right">{t("Salary")}</TableCell>
-              <TableCell size="small"/>
+              <TableCell className={classes.tableHead}>{t("Name")}</TableCell>
+              <TableCell className={classes.tableHead} align="right">{t("Salary")}</TableCell>
+              <TableCell className={classes.buttonCell}/>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -100,13 +108,19 @@ const table = (
                     </TableCell>
                     <TableCell align="right">
                       <TextField
-                        type="number"
+                        size="small"
                         name={`salaries[${index}]`}
-                        value={updatedEmployee?.salary?.value || employee.salary.value}
+                        variant="outlined"
+                        value={updatedEmployee?.salary?.value.toString() || employee.salary.value.toString()}
                         onChange={handleSalaryChanged}
+                        InputProps={{
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          inputComponent: MoneyFormat as any
+                        }}
+                        required
                       />
                     </TableCell>
-                    <TableCell padding="checkbox" size="small">
+                    <TableCell padding="checkbox">
                       { updatedEmployee && <IconButton onClick={() => saveEmployee(updatedEmployee)}>
                         <SaveIcon/>
                       </IconButton> }

@@ -1,6 +1,5 @@
 import React from "react";
 import { Route, Switch, BrowserRouter } from "react-router-dom";
-import {Container} from "@material-ui/core";
 import {PageNotFound} from "./page-not-found";
 import {ManageEmployeesPage} from "./employee/manage-employees-page";
 import {ErrorBoundary} from "./error-boundary";
