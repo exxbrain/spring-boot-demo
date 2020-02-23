@@ -9,7 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import { createStyles, WithStyles, StyleRules, withStyles } from '@material-ui/core/styles';
 import SaveIcon from '@material-ui/icons/Save';
-import {TableHead, TablePagination, IconButton, TextField} from "@material-ui/core";
+import {TableHead, TablePagination, IconButton } from "@material-ui/core";
 
 import BigNumber from "bignumber.js";
 import {
@@ -18,7 +18,7 @@ import {
 } from "./employee";
 import {RootState} from "../root-reducer";
 import {Employee} from "./employee.model";
-import {MoneyFormat} from "../common/money-format";
+import {CurrencyField } from "../common/currency-field";
 
 const styles = () : StyleRules => createStyles({
   paper: { /* ... */ },
@@ -107,16 +107,12 @@ const table = (
                       {employee.name}
                     </TableCell>
                     <TableCell align="right">
-                      <TextField
+                      <CurrencyField
                         size="small"
                         name={`salaries[${index}]`}
                         variant="outlined"
-                        value={updatedEmployee?.salary?.value.toString() || employee.salary.value.toString()}
+                        value={updatedEmployee?.salary?.value || employee.salary.value}
                         onChange={handleSalaryChanged}
-                        InputProps={{
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          inputComponent: MoneyFormat as any
-                        }}
                         required
                       />
                     </TableCell>

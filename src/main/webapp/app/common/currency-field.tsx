@@ -1,5 +1,6 @@
 import React from "react"
 import NumberFormat from 'react-number-format';
+import {InputAdornment, TextField, TextFieldProps} from "@material-ui/core";
 
 interface Event {
   target: { name: string, value: string };
@@ -20,7 +21,7 @@ const createEvent = (name: string, value: string): Event  => {
   }
 };
 
-export const MoneyFormat = (
+const MoneyFormat = (
   { inputRef,
     onChange,
     name,
@@ -41,7 +42,22 @@ export const MoneyFormat = (
       thousandSeparator=" "
       isNumericString
       decimalScale={2}
-      suffix=" ₽"
     />
   );
 };
+
+export const CurrencyField = (
+  {
+    value,
+    ...other
+  }: TextFieldProps): JSX.Element => (
+  <TextField
+    {...other}
+    value={(value as any).toString()}
+    InputProps={{
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      inputComponent: MoneyFormat as any,
+      endAdornment: <InputAdornment position="end">₽</InputAdornment>
+    }}
+  />
+);

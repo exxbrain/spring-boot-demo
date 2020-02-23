@@ -15,7 +15,7 @@ import BigNumber from 'bignumber.js';
 import { Close as CloseIcon } from "@material-ui/icons"
 import {Formik, Form} from "formik";
 import { hireNewEmployee as hireNewEmployeeAction } from "./employee";
-import { MoneyFormat } from "../common/money-format";
+import { CurrencyField } from "../common/currency-field";
 
 const styles = ({ spacing, palette}: Theme) : StyleRules => createStyles({
   margin: {
@@ -36,10 +36,6 @@ interface AddEmployeeDialogProps {
 }
 
 type Props = AddEmployeeDialogProps & DispatchProps & WithStyles<typeof styles>;
-interface State {
-  name: string;
-  salary: string;
-}
 
 const dialog = ({open, onClose, hireNewEmployee, classes}: Props): JSX.Element => {
   const { t } = useTranslation(undefined, { useSuspense: true });
@@ -95,7 +91,7 @@ const dialog = ({open, onClose, hireNewEmployee, classes}: Props): JSX.Element =
                 label={t("Name")}
                 onChange={handleChange}
                 variant="outlined"/>
-              <TextField
+              <CurrencyField
                 className={classes.margin}
                 fullWidth
                 label={t("Salary")}
@@ -106,11 +102,7 @@ const dialog = ({open, onClose, hireNewEmployee, classes}: Props): JSX.Element =
                 helperText={touched.salary && errors.salary}
                 value={values.salary}
                 onChange={handleChange}
-                onBlur={handleBlur}
-                InputProps={{
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  inputComponent: MoneyFormat as any,
-                }}/>
+                onBlur={handleBlur}/>
             </DialogContent>
             <DialogActions>
               <Button disabled={isSubmitting}
