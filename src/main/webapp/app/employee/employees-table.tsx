@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from "react";
 import { connect } from 'react-redux';
 import { useTranslation } from "react-i18next";
-import Paper from "@material-ui/core/Paper";
 import TableContainer from "@material-ui/core/TableContainer";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import {createStyles, WithStyles, StyleRules, withStyles, Theme} from '@material-ui/core/styles';
+import {createStyles, WithStyles, StyleRules, withStyles} from '@material-ui/core/styles';
 import SaveIcon from '@material-ui/icons/Save';
-import {TableHead, TablePagination, IconButton, Container, Box} from "@material-ui/core";
+import {TableHead, TablePagination, IconButton} from "@material-ui/core";
 
 import BigNumber from "bignumber.js";
 import {
