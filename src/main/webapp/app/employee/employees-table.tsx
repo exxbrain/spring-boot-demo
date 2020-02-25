@@ -6,9 +6,9 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import {createStyles, WithStyles, StyleRules, withStyles} from '@material-ui/core/styles';
+import {createStyles, WithStyles, StyleRules, withStyles, Theme} from '@material-ui/core/styles';
 import SaveIcon from '@material-ui/icons/Save';
-import {TableHead, TablePagination, IconButton} from "@material-ui/core";
+import {TableHead, TablePagination, IconButton, AppBar, Container, Grid} from "@material-ui/core";
 
 import BigNumber from "bignumber.js";
 import {
@@ -19,16 +19,18 @@ import {RootState} from "../root-reducer";
 import {Employee} from "./employee.model";
 import {CurrencyField } from "../common/currency-field";
 
-const styles = () : StyleRules => createStyles({
+const styles = ({palette}: Theme) : StyleRules => createStyles({
   buttonCell: {
-    width: 60
+    width: 55
   },
   tableHead: {
     fontWeight: "bold"
   },
-  container: {
-    height: "100%",
-  }
+  bottomBar: {
+    top: 'auto',
+    bottom: 0,
+    backgroundColor: palette.background.default
+  },
 });
 
 type Props = StateProps & DispatchProps & WithStyles<typeof styles>
@@ -116,7 +118,7 @@ const table = (
                           required
                         />
                       </TableCell>
-                      <TableCell padding="checkbox">
+                      <TableCell padding="checkbox" align="left">
                         { updatedEmployee && <IconButton onClick={() => saveEmployee(updatedEmployee)}>
                           <SaveIcon/>
                         </IconButton> }
@@ -135,17 +137,24 @@ const table = (
             </TableBody>
           </Table>
         </TableContainer>
-        {
-          !isEmpty && <TablePagination
-            rowsPerPageOptions={[20, 50, 100]}
-            labelRowsPerPage={t("Rows per page")}
 
-            component="div"
-            count={pageObject.totalElements}
-            rowsPerPage={pageObject.size}
-            page={pageObject.number}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}/>
+        {
+          !isEmpty && <AppBar className={classes.bottomBar}>
+            <Grid container justify="center">
+              <Container maxWidth='sm'>
+                <TablePagination
+                  rowsPerPageOptions={[20, 50, 100]}
+                  labelRowsPerPage={t("Rows per page")}
+
+                  component="div"
+                  count={pageObject.totalElements}
+                  rowsPerPage={pageObject.size}
+                  page={pageObject.number}
+                  onChangePage={handleChangePage}
+                  onChangeRowsPerPage={handleChangeRowsPerPage}/>
+              </Container>
+            </Grid>
+          </AppBar>
         }
     </>
   );

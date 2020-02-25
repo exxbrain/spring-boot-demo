@@ -7,13 +7,8 @@ import {MainToolbar} from "./main-toolbar";
 import {EmployeesTable} from "./employees-table";
 
 const styles = ({mixins}: Theme) : StyleRules => createStyles({
-  width: {
-    maxWidth: 700
-  },
-  grid: {
-    height: "100vh",
-    paddingTop: mixins.toolbar.minHeight as number + 20,
-    paddingBottom: mixins.toolbar.minHeight
+  offset: {
+    height: mixins.toolbar.minHeight as number + 15
   }
 });
 
@@ -22,16 +17,18 @@ const page = ({classes}: WithStyles<typeof styles>) : JSX.Element => {
     <Suspense fallback={<LoadingBar/>}>
       <AppBar>
         <Grid container justify="center">
-          <Container className={classes.width}>
+          <Container maxWidth='sm'>
             <MainToolbar/>
           </Container>
         </Grid>
       </AppBar>
+      <div className={classes.offset}/>
       <Grid container justify="center">
-        <Container className={clsx([classes.grid, classes.width])}>
+        <Container maxWidth='sm'>
           <EmployeesTable/>
         </Container>
       </Grid>
+      <div className={classes.offset}/>
     </Suspense>
   );
 };
