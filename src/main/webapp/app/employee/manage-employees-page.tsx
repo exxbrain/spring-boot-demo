@@ -6,15 +6,15 @@ import {createStyles, StyleRules, Theme, WithStyles} from "@material-ui/core/sty
 import {MainToolbar} from "./main-toolbar";
 import {EmployeesTable} from "./employees-table";
 
-const styles = ({mixins, spacing}: Theme) : StyleRules => createStyles({
-  offset: mixins.toolbar,
+const styles = ({mixins}: Theme) : StyleRules => createStyles({
   width: {
     maxWidth: 700
   },
-  margin: {
-    margin: spacing(2)
+  grid: {
+    height: "100vh",
+    paddingTop: mixins.toolbar.minHeight as number + 20,
+    paddingBottom: mixins.toolbar.minHeight
   }
-
 });
 
 const page = ({classes}: WithStyles<typeof styles>) : JSX.Element => {
@@ -27,9 +27,8 @@ const page = ({classes}: WithStyles<typeof styles>) : JSX.Element => {
           </Container>
         </Grid>
       </AppBar>
-      <div className={classes.offset} />
       <Grid container justify="center">
-        <Container className={clsx(classes.width, classes.margin)}>
+        <Container className={clsx([classes.grid, classes.width])}>
           <EmployeesTable/>
         </Container>
       </Grid>

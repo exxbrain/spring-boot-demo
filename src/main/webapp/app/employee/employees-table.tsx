@@ -7,9 +7,9 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import { createStyles, WithStyles, StyleRules, withStyles } from '@material-ui/core/styles';
+import {createStyles, WithStyles, StyleRules, withStyles, Theme} from '@material-ui/core/styles';
 import SaveIcon from '@material-ui/icons/Save';
-import {TableHead, TablePagination, IconButton } from "@material-ui/core";
+import {TableHead, TablePagination, IconButton, Container, Box} from "@material-ui/core";
 
 import BigNumber from "bignumber.js";
 import {
@@ -21,13 +21,14 @@ import {Employee} from "./employee.model";
 import {CurrencyField } from "../common/currency-field";
 
 const styles = () : StyleRules => createStyles({
-  paper: { /* ... */ },
-  button: { /* ... */ },
   buttonCell: {
     width: 60
   },
   tableHead: {
     fontWeight: "bold"
+  },
+  container: {
+    height: "100%",
   }
 });
 
@@ -87,67 +88,67 @@ const table = (
   };
 
   return (
-    <form>
-      <TableContainer component={Paper}>
-        <Table className={classes.table} size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell className={classes.tableHead}>{t("Name")}</TableCell>
-              <TableCell className={classes.tableHead} align="right">{t("Salary")}</TableCell>
-              <TableCell className={classes.buttonCell}/>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {
-              employees.map((employee, index) => {
-                const updatedEmployee = updatedEmployees.get(employee.id);
-                return (
-                  <TableRow key={employee.id}>
-                    <TableCell>
-                      {employee.name}
-                    </TableCell>
-                    <TableCell align="right">
-                      <CurrencyField
-                        size="small"
-                        name={`salaries[${index}]`}
-                        variant="outlined"
-                        value={updatedEmployee?.salary?.value || employee.salary.value}
-                        onChange={handleSalaryChanged}
-                        required
-                      />
-                    </TableCell>
-                    <TableCell padding="checkbox">
-                      { updatedEmployee && <IconButton onClick={() => saveEmployee(updatedEmployee)}>
-                        <SaveIcon/>
-                      </IconButton> }
-                    </TableCell>
-                  </TableRow>
-                )
-              })
-            }
-            {
-              isEmpty && <TableRow>
-                <TableCell>
-                  {t("No employees found!")}
-                </TableCell>
+    <>
+        <TableContainer className={classes.container}>
+          <Table stickyHeader className={classes.table} size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.tableHead}>{t("Name")}</TableCell>
+                <TableCell className={classes.tableHead} align="right">{t("Salary")}</TableCell>
+                <TableCell className={classes.buttonCell}/>
               </TableRow>
-            }
-          </TableBody>
-        </Table>
-      </TableContainer>
-      {
-        !isEmpty && <TablePagination
-          rowsPerPageOptions={[20, 50, 100]}
-          labelRowsPerPage={t("Rows per page")}
+            </TableHead>
+            <TableBody>
+              {
+                employees.map((employee, index) => {
+                  const updatedEmployee = updatedEmployees.get(employee.id);
+                  return (
+                    <TableRow key={employee.id}>
+                      <TableCell>
+                        {employee.name}
+                      </TableCell>
+                      <TableCell align="right">
+                        <CurrencyField
+                          size="small"
+                          name={`salaries[${index}]`}
+                          variant="outlined"
+                          value={updatedEmployee?.salary?.value || employee.salary.value}
+                          onChange={handleSalaryChanged}
+                          required
+                        />
+                      </TableCell>
+                      <TableCell padding="checkbox">
+                        { updatedEmployee && <IconButton onClick={() => saveEmployee(updatedEmployee)}>
+                          <SaveIcon/>
+                        </IconButton> }
+                      </TableCell>
+                    </TableRow>
+                  )
+                })
+              }
+              {
+                isEmpty && <TableRow>
+                  <TableCell>
+                    {t("No employees found!")}
+                  </TableCell>
+                </TableRow>
+              }
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {
+          !isEmpty && <TablePagination
+            rowsPerPageOptions={[20, 50, 100]}
+            labelRowsPerPage={t("Rows per page")}
 
-          component="div"
-          count={pageObject.totalElements}
-          rowsPerPage={pageObject.size}
-          page={pageObject.number}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}/>
-      }
-    </form>
+            component="div"
+            count={pageObject.totalElements}
+            rowsPerPage={pageObject.size}
+            page={pageObject.number}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}/>
+        }
+    </>
   );
 };
 
