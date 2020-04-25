@@ -46,7 +46,6 @@ to compile before)
 ./gradlew -Pprod
 ```
 
-
 ## Other cases
 
 ### Run jar
