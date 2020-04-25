@@ -11,7 +11,7 @@ const utils = require('./utils.js');
 const commonConfig = require('./webpack.common.js');
 
 const ENV = 'production';
-const SERVER_API_URL = 'http://localhost/api';
+const SERVER_API_URL = 'https://exxtest.herokuapp.com/api';
 
 module.exports = webpackMerge(commonConfig({ env: ENV, serverApiUrl: SERVER_API_URL }), {
   // devtool: 'source-map', // Enable source maps. Please note that this will slow down the build
