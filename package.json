@@ -20,7 +20,7 @@
     "i18next-browser-languagedetector": "^4.0.1",
     "i18next-xhr-backend": "^3.2.2",
     "loaders.css": "0.1.2",
-    "lodash": "4.17.15",
+    "lodash": "4.17.21",
     "moment": "2.24.0",
     "net": "^1.0.2",
     "react": "16.12.0",
